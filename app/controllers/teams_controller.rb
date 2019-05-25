@@ -1,6 +1,7 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_team, only: %i[show edit update destroy]
+  before_action :not_owner, only: %i[edit update]
 
   def index
     @teams = Team.all
@@ -30,6 +31,7 @@ class TeamsController < ApplicationController
   end
 
   def update
+    @team.owner_id == current_user.id
     if @team.update(team_params)
       redirect_to @team, notice: 'チーム更新に成功しました！'
     else
@@ -39,8 +41,12 @@ class TeamsController < ApplicationController
   end
 
   def destroy
-    @team.destroy
-    redirect_to teams_url, notice: 'チーム削除に成功しました！'
+    if @team.owner_id == current_user.id
+      @team.destroy
+      redirect_to teams_url, notice: 'チーム削除に成功しました！'
+    else
+      redirect_to teams_path, notice: "権限がありません"
+    end
   end
 
   def dashboard
@@ -56,4 +62,9 @@ class TeamsController < ApplicationController
   def team_params
     params.fetch(:team, {}).permit %i[name icon icon_cache owner_id keep_team_id]
   end
+  
+  def not_owner
+    redirect_to team_path, notice:"チームのオーナーではありません！" unless current_user == @team.owner
+  end
+  
 end
