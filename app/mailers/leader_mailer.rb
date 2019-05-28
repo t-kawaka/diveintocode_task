@@ -4,6 +4,7 @@ class LeaderMailer < ApplicationMailer
   def leader_mail(user)
     @user = user
     
-    mail to: @email, subject: 'チームリーダーの権限はあなたに変更されました。'
+    
+    mail to: @user.email, subject: 'チームリーダーの権限はあなたに変更されました。'
   end
 end

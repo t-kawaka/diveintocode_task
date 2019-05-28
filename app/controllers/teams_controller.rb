@@ -57,6 +57,7 @@ class TeamsController < ApplicationController
     @team.owner_id = params[:owner_id]
     if @team.save
       @user = User.find(params[:owner_id])
+      #LeaderMailer.send_message_to_user(@user).deliver
       LeaderMailer.leader_mail(@user).deliver
       redirect_to team_url(params[:id]), notice: "権限変更が成功しました！"
     else
