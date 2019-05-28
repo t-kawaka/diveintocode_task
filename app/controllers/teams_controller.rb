@@ -56,6 +56,8 @@ class TeamsController < ApplicationController
   def change
     @team.owner_id = params[:owner_id]
     if @team.save
+      @user = User.find(params:[:owner_id])
+      LeaderMailer.leader_mail(@user).deliver
       redirect_to team_url(params[:id])
     else
       redirect_to team_url(params[:id])
