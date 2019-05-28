@@ -56,11 +56,11 @@ class TeamsController < ApplicationController
   def change
     @team.owner_id = params[:owner_id]
     if @team.save
-      @user = User.find(params:[:owner_id])
+      @user = User.find(params[:owner_id])
       LeaderMailer.leader_mail(@user).deliver
-      redirect_to team_url(params[:id])
+      redirect_to team_url(params[:id]), notice: "権限変更が成功しました！"
     else
-      redirect_to team_url(params[:id])
+      redirect_to team_url(params[:id]), notice: "権限変更が失敗しました！"
     end
   end
 
