@@ -10,7 +10,7 @@
         <%= @article.user.email %>
         <%= l(@article.created_at, format: :long) %>
         <%= link_to '編集', edit_article_path(@article) %>
-        <%= link_to '削除', article_path(@article), method: :delete %>
+        <%= link_to '削除', article_path(@article), method: :delete, data:{ confirm:"削除しますか？" } %>
       </div>
       <!-- /.card-header -->
       <div class="card-body">

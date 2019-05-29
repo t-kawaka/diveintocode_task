@@ -14,7 +14,7 @@ class AgendasController < ApplicationController
     @agenda = current_user.agendas.build(title: params[:title])
     @agenda.team = Team.friendly.find(params[:team_id])
     current_user.keep_team_id = @agenda.team.id
-    if current_user.save && @agenda.save
+    if Assign.where(user_id: current_user.id).where(team_id: @agenda.team.id).present? && current_user.save && @agenda.save
       redirect_to dashboard_url, notice: 'アジェンダ作成に成功しました！'
     else
       redirect_to dashboard_url, notice: 'アジェンダ作成に失敗しました！アジェンダは2文字〜30文字で作成お願いします!'

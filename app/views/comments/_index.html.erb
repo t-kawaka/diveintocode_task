@@ -11,7 +11,7 @@
 
         <% if comment.user == current_user || current_user.id == comment.article.team.owner_id %>
           <p>
-            <%= link_to 'コメントを削除する', comment_path(comment), method: :delete, remote: true %>
+            <%= link_to 'コメントを削除する', comment_path(comment), method: :delete, remote: true, data:{ confirm:"削除しますか？" } %>
             / <%= link_to 'コメントを編集する', edit_comment_path(comment) %>
           </p>
         <% end %>
