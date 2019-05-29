@@ -45,7 +45,9 @@
                       <td><%= assign.user.email %></td>
                       <% if assign.team.owner.id == current_user.id %>
                         <td><%= link_to '削除', team_assign_path(@team, assign), method: :delete, class: 'btn btn-sm btn-danger' %></td>
-                        <td><%= link_to '権限変更', team_change_path(@team, params:{id:assign.team.id, owner_id: assign.user_id }),method: :put, class:"btn-btn-sm btn-primary p-2" %></td>
+                        <% unless assign.team.owner.id == assign.user.id %>
+                          <td><%= link_to '権限変更', team_change_path(@team, params:{id:assign.team.id, owner_id: assign.user_id }),method: :put, class:"btn-btn-sm btn-primary p-2" %></td>
+                        <% end %>
                       <% elsif assign.user.id == current_user.id %>
                         <td><%= link_to '削除', team_assign_path(@team, assign), method: :delete, class: 'btn btn-sm btn-danger' %></td>
                       <% end %>
