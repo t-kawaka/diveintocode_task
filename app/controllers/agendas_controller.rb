@@ -1,5 +1,5 @@
 class AgendasController < ApplicationController
-  # before_action :set_agenda, only: %i[show edit update destroy]
+  before_action :set_agenda, only: %i[destroy]
 
   def index
     @agendas = Agenda.all
@@ -17,14 +17,32 @@ class AgendasController < ApplicationController
     if Assign.where(user_id: current_user.id).where(team_id: @agenda.team.id).present? && current_user.save && @agenda.save
       redirect_to dashboard_url, notice: 'アジェンダ作成に成功しました！'
     else
-      redirect_to dashboard_url, notice: 'アジェンダ作成に失敗しました！アジェンダは2文字〜30文字で作成お願いします!'
+      redirect_to dashboard_url, notice: 'アジェンダ作成に失敗しました！アジェンダは2文字〜20文字で作成お願いします!'
+    end
+  end
+  
+  def destroy
+    if @agenda.user_id == current_user.id || @agenda.team.owner_id == current_user.id 
+      team_id = @agenda.team_id
+      @users = Assign.where(team_id: team_id).all
+      @users.each do |user|
+        AgendaDeleteMailer.agenda_delete_mail(@agenda, user).deliver
+      end
+      @agenda.destroy
+      redirect_to dashboard_url, notice: "アジェンダを削除しました"
+    else
+      redirect_to dashboard_url, notice:"削除権限がありません。"
     end
   end
 
   private
 
   def set_agenda
-    @agenda = Agenda.find(params[:id])
+    if Agenda.find_by(id:params[:id])
+      @agenda = Agenda.find(params[:id])
+    else
+      redirect_to dashboard_url, notice:"見つかりませんでした"
+    end
   end
 
   def agenda_params

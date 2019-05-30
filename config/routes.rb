@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   
   resources :teams do
     put :change
-    resources :assigns, only: %w(create destroy)
+    resources :assigns, only: %w(new create destroy)
     resources :agendas, shallow: true do
       resources :articles do
         resources :comments

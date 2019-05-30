@@ -1,0 +1,14 @@
+<h1>アジェンダが削除されました</h1>
+
+<h4>
+  あなたのチームのアジェンダが削除されました。
+</h4>
+
+<h4>
+  アジェンダ名：<%= @agenda.title %><br>
+</h4>
+
+<h4>チームメンバー</h4>
+<% @agenda.team.members.each do |member| %>
+  <h5><%= member.email %></h5>
+<% end %>
