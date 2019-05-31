@@ -1,0 +1,7 @@
+ja:
+  activerecord:
+    attributes:
+      article:
+        title: "タイトル"
+        content: "内容"
+        image: "画像"
