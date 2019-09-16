@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_team, only: %i[show edit update destroy]
+  before_action :set_team, only: %i[show edit update destroy change]
   before_action :not_owner, only: %i[edit update]
 
   def index
@@ -51,6 +51,18 @@ class TeamsController < ApplicationController
 
   def dashboard
     @team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : current_user.teams.first
+  end
+  
+  def change
+    @team.owner_id = params[:owner_id]
+    if @team.save
+      @user = User.find(params[:owner_id])
+      #LeaderMailer.send_message_to_user(@user).deliver
+      LeaderMailer.leader_mail(@user).deliver
+      redirect_to team_url(params[:id]), notice: "権限変更が成功しました！"
+    else
+      redirect_to team_url(params[:id]), notice: "権限変更が失敗しました！"
+    end
   end
 
   private
